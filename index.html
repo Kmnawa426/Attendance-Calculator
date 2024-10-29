@@ -138,13 +138,18 @@
     </div>
 
     <script>
-        const subjects = [];
+        let subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+
+        function saveToLocalStorage() {
+            localStorage.setItem('subjects', JSON.stringify(subjects));
+        }
 
         function addSubject() {
             const subjectName = document.getElementById('subjectInput').value.trim();
             if (subjectName) {
                 subjects.push({ name: subjectName, attended: 0, total: 0 });
                 document.getElementById('subjectInput').value = '';
+                saveToLocalStorage();
                 renderSubjects();
             }
         }
@@ -154,11 +159,13 @@
                 subjects[index].attended += 1;
             }
             subjects[index].total += 1;
+            saveToLocalStorage();
             renderSubjects();
         }
 
         function deleteSubject(index) {
             subjects.splice(index, 1);
+            saveToLocalStorage();
             renderSubjects();
         }
 
@@ -185,6 +192,9 @@
                 subjectList.appendChild(li);
             });
         }
+
+        // Render subjects on page load
+        renderSubjects();
     </script>
 </body>
 </html>
