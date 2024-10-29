@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance Calculator</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #83a4d4, #b6fbff);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        .add-subject {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-subject input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .add-subject button {
+            padding: 10px 15px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .add-subject button:hover {
+            background: #45a049;
+        }
+
+        .subject-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .subject-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #f1f8ff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .subject-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .buttons button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .attended-btn {
+            background: #2196F3;
+            color: white;
+        }
+
+        .absent-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #d9534f;
+            color: white;
+        }
+
+        .buttons button:hover {
+            opacity: 0.9;
+        }
+
+        .percentage {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Attendance Calculator</h2>
+
+        <div class="add-subject">
+            <input type="text" id="subjectInput" placeholder="Enter Subject Name">
+            <button onclick="addSubject()">Add Subject</button>
+        </div>
+
+        <ul id="subjectList" class="subject-list"></ul>
+    </div>
+
+    <script>
+        const subjects = [];
+
+        function addSubject() {
+            const subjectName = document.getElementById('subjectInput').value.trim();
+            if (subjectName) {
+                subjects.push({ name: subjectName, attended: 0, total: 0 });
+                document.getElementById('subjectInput').value = '';
+                renderSubjects();
+            }
+        }
+
+        function markAttendance(index, type) {
+            if (type === 'attended') {
+                subjects[index].attended += 1;
+            }
+            subjects[index].total += 1;
+            renderSubjects();
+        }
+
+        function deleteSubject(index) {
+            subjects.splice(index, 1);
+            renderSubjects();
+        }
+
+        function renderSubjects() {
+            const subjectList = document.getElementById('subjectList');
+            subjectList.innerHTML = '';
+
+            subjects.forEach((subject, index) => {
+                const percentage = subject.total ? ((subject.attended / subject.total) * 100).toFixed(2) : 0;
+                const li = document.createElement('li');
+                li.classList.add('subject-item');
+
+                li.innerHTML = `
+                    <div class="subject-header">
+                        <span>${subject.name}</span>
+                        <span class="percentage">${percentage}%</span>
+                    </div>
+                    <div class="buttons">
+                        <button class="attended-btn" onclick="markAttendance(${index}, 'attended')">Attended</button>
+                        <button class="absent-btn" onclick="markAttendance(${index}, 'absent')">Absent</button>
+                        <button class="delete-btn" onclick="deleteSubject(${index})">Delete</button>
+                    </div>
+                `;
+                subjectList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
